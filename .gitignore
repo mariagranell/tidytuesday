@@ -1,7 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm,intellij+iml,python,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm,intellij+iml,python,macos
 
-#remove all csv files
+#remove all weird files
 *.csv
 *.xml # also that i don´t know what it is 
 

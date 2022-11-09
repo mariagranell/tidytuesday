@@ -19,8 +19,9 @@ the stats, but as you can see in the graph, it doesn´t seem like there
 is a relationship between the difference between radio stations with FM
 or AM and the GDP per each state.
 
-Find in this document the minimum code I needed to create the graph. And
-in the file `state_stations.R`, you can find all my data exploration:
+![graph](/Users/mariagranell/Repositories/tidytuesday/state_stations_w45/AMvsFM.png "AM vs FM")
+
+Find at the end of this document the minimum code I needed to create the graph and the graph code. In the file `state_stations.R`, you can find all my data exploration:
 
 ``` r
 #Directory

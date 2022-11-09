@@ -1,6 +1,6 @@
 ---
 title: "Radio Stations"
-output: rmarkdown::github_document
+output: html_notebook
 ---
 
 My first contribution to [tidy tuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-11-08)!! Even though there is plenty of room for improvement, I´ve had a lot of fun creating this graph.
