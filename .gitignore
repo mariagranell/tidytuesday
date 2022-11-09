@@ -2,8 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm,intellij+iml,python,macos
 
 #remove all csv files
-.csv
-.xml # also that i don´t know what it is 
+*.csv
+*.xml # also that i don´t know what it is 
 
 ### Intellij+iml ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider

@@ -1,17 +1,28 @@
----
-title: "Radio Stations"
-output: rmarkdown::github_document
----
+Radio Stations
+================
 
-My first contribution to [tidy tuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-11-08)!! Even though there is plenty of room for improvement, I´ve had a lot of fun creating this graph.
+My first contribution to [tidy
+tuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-11-08)!!
+Even though there is plenty of room for improvement, I´ve had a lot of
+fun creating this graph.
 
-The data had information on radio stations across states and cities of the U.S. The original post created a map with this information. In my case, I got interested in how many radio stations used AM vs FM frequencies. After a quick google, I learned that FM frequencies are higher quality but are more expensive. I wanted to know if radio stations in poorer states prefer to use AM frequencies.
+The data had information on radio stations across states and cities of
+the U.S. The original post created a map with this information. In my
+case, I got interested in how many radio stations used AM vs FM
+frequencies. After a quick google, I learned that FM frequencies are
+higher quality but are more expensive. I wanted to know if radio
+stations in poorer states prefer to use AM frequencies.
 
-So, I loaded the data from the [U.S. Department of Commerce]( https://apps.bea.gov/regional/downloadzip.cfm). I didn´t do the stats, but as you can see in the graph, it doesn´t seem like there is a relationship between the difference between radio stations with FM or AM and the GDP per each state.
+So, I loaded the data from the [U.S. Department of
+Commerce](https://apps.bea.gov/regional/downloadzip.cfm). I didn´t do
+the stats, but as you can see in the graph, it doesn´t seem like there
+is a relationship between the difference between radio stations with FM
+or AM and the GDP per each state.
 
-Find in this document the minimum code I needed to create the graph. And in the file `state_stations.R`, you can find all my data exploration:
+Find in this document the minimum code I needed to create the graph. And
+in the file `state_stations.R`, you can find all my data exploration:
 
-```{r echo=T, results='hide', error=F, warning=F, message=F}
+``` r
 #Directory
 setwd("/Users/mariagranell/Repositories/tidytuesday/state_stations_w45")
 
@@ -87,11 +98,11 @@ data <-data%>%
   y =as.numeric(y),
   gdp = as.numeric(gdp)
   )
-
 ```
 
 The graph:
-```{r warning = F}
+
+``` r
 #graph
  plot <-ggplot(data, aes(y=reorder(x,gdp), x=y)) +
    geom_segment(
@@ -140,7 +151,6 @@ plot +
            y = data[data$x == "","y"]+1,
            label = "More FM radios",
            size= 3)
-
 ```
 
-
+![](/Users/mariagranell/Repositories/tidytuesday/state_stations_w45/README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
