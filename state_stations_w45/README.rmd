@@ -1,3 +1,17 @@
+---
+title: "Radio Stations"
+output: html_notebook
+---
+
+My first contribution to [tidy tuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-11-08)!! Even though there is plenty of room for improvement, I´ve had a lot of fun creating this graph.
+
+The data had information on radio stations across states and cities of the U.S. The original post created a map with this information. In my case, I got interested in how many radio stations used AM vs FM frequencies. After a quick google, I learned that FM frequencies are higher quality but are more expensive. I wanted to know if radio stations in poorer states prefer to use AM frequencies.
+
+So, I loaded the data from the [U.S. Department of Commerce]( https://apps.bea.gov/regional/downloadzip.cfm). I didn´t do the stats, but as you can see in the graph, it doesn´t seem like there is a relationship between the difference between radio stations with FM or AM and the GDP per each state.
+
+Find in this document the minimum code I needed to create the graph. And in the file `state_stations.R`, you can find all my data exploration:
+
+```{r echo=T, results='hide', error=F, warning=F, message=F}
 #Directory
 setwd("/Users/mariagranell/Repositories/tidytuesday/state_stations_w45")
 
@@ -5,41 +19,21 @@ setwd("/Users/mariagranell/Repositories/tidytuesday/state_stations_w45")
 library(ggplot2)
 library(magrittr) # needs to be run every time you start R and want to use %>%
 library(dplyr)    # alternatively, this also loads %>%
-library(wesanderson) # nice colours
 library(tidytuesdayR) # important to load tidy tuesday
+library(wesanderson) # nice colours
 pal <- wes_palette("Zissou1")
 
 # Select the data set of the week, ISO-8601 date or year/week works!
 tuesdata <- tidytuesdayR::tt_load(2022, week = 45)
-
 state_stations <- tuesdata$state_stations
-state_stations %>%
-  group_by(state, format)%>%
-  tally()
-
-state_stations %>%
-  ggplot(aes( x=frequency))+
-  geom_histogram(stat="count")
 
 #create a factor with AM and FM frequencies
 state_stations$module <- ifelse(grepl('FM$', state_stations$frequency), "FM", "AM")
 state_stations$module <- as.factor(state_stations$module)
 state_stations$call_sign <- as.character(state_stations$call_sign)
 
-state_stations %>%
-  group_by(state,module)%>%
-  summarise(n_module=n())%>%
-  ggplot(aes(x=state, y=n_module, fill= module))+
-  geom_bar(stat="identity",position = position_dodge())
-
 #extract the number of the frequencies
 state_stations$num_frequencies <- as.numeric(gsub("[ FMA]", "", state_stations$frequency))
-# make the cool violin graph stuff
-
-#plotting them didn´t reveal much
-state_stations[state_stations$module == "AM",]%>%
-  ggplot(aes(x=num_frequencies))+
-  geom_histogram(bins=30)
 
 #so apparently fm is straight better than am. and more expensive. but am covers more distance
 #I would like to extract gdp per state and see amount of fm/am
@@ -60,10 +54,6 @@ ranking$state <- ranking$GeoName
 ranking$gdp <- ranking$X2021
 #merging both data frames
 state_stations<-merge(state_stations, ranking[, c("gdp","state")], by="state", all.x= F)
-#checking the gdp spread
-df%>%
-  ggplot(aes(x=state, y=gdp))+
-  geom_bar(stat="identity")
 
 #creating a percentage of am vs fm per state
 df <-as.data.frame(
@@ -76,25 +66,20 @@ df <-as.data.frame(
 # adding it to the data frame
 df<-merge(df, ranking[, c("gdp", "state")], by="state", all.x= F)
 
-df %>%
-  ggplot(aes(x=gdp, y=freq, colour=module))+
-  #geom_point()
-  geom_bar(stat= "identity")
-
 #create data frame to make the graph
 # you need to create a difference between AM and FM
 # I combined ifelse to remove ohio that only has AM. Then by grouping by state and asking df into the variable tada!
 b<-df%>%
   group_by(state)%>%
   mutate(difference= ifelse(state == "Ohio", cnt, (diff(cnt)*-1)))
-#but after merging we have to give Ohio a -
+#but after merging we have to give Ohio a - becuase they only have AM stations
 b[b$state== "Ohio","difference"] <- b[b$state== "Ohio","difference"]*-1
 
 am <-b[b$module=="AM",]
 data<-data.frame(gdp=(am$gdp)/1000, y=am$difference, x=am$state) #I divided gdp by 1000 so it´s smaller
 
 #I´m going to add a fake data point at the end so i can paint the scale
-data$x <- as.character(data$x) #you cannot add a row ti factor when that level is not there
+data$x <- as.character(data$x) #you cannot add a row to factor when that level is not there
 data[nrow(data)+1,] <- c(min(data$gdp)-0.1, 0, "")
 data <-data%>%
   mutate(
@@ -103,6 +88,10 @@ data <-data%>%
   gdp = as.numeric(gdp)
   )
 
+```
+
+The graph:
+```{r warning = F}
 #graph
  plot <-ggplot(data, aes(y=reorder(x,gdp), x=y)) +
    geom_segment(
@@ -151,5 +140,7 @@ plot +
            y = data[data$x == "","y"]+1,
            label = "More FM radios",
            size= 3)
+
+```
 
 
