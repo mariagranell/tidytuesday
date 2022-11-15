@@ -4,6 +4,9 @@
 # date: 15 nov 2022
 # ---------
 
+setwd("/Users/mariagranell/Repositories/tidytuesday/page_metrics_w46")
+
+
 # packages -------------
 library(tidyverse)
 library(jsonlite)
@@ -52,8 +55,8 @@ ggthemr('solarized', type = 'outer', layout = "minimal", spacing =2)
 rp_ally <-
   ggplot(mix_long, aes(x= p90, y= year, fill=  Measurment))+
   geom_density_ridges_gradient(scale=3, rel_min_height = 0.01)+
-  labs(title= "Webpages metrics over the years",
-       subtitle = str_wrap("Webpages have become more complex over the years.
+  labs(title= "Web pages metrics over the years",
+       subtitle = str_wrap("Web pages have become more complex over the years.
        The overall number of bytes displayed seems to have increased almost linearly,
        a pattern followed by ally scores and the speed indexes", 80),
        caption = "Source: hhtparchive.org · Graphic: Maria Granell Ruiz",
