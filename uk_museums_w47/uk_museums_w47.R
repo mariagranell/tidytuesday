@@ -12,7 +12,7 @@ library(tidyverse)
 library(tidytuesdayR)
 # make the plot
 library(ggplot2)
-library(ggthemr) #cool theme
+library(ggthemes) # has a theme for maps
 # plot a map
 library(maps)
 # moving graph
@@ -52,44 +52,47 @@ data$year_closed <- as.integer(data$year_closed)
 data$year_open <- as.integer(data$year_open)
 
 # see if the data is cooler from the 2000
-data <- data[data$year_open > 1999,]
+data <- data[data$year_open > 1800,]
 
 # colors
 col_dots <- "white"
 col_background <- "#11344F"
 
 # static ggplot
-static <- ggplot() +
+ ggplot() +
   geom_polygon(data = uk, aes(x=long, y=lat, group= group), fill="grey", alpha = 0.3) +
   geom_point(data = data, aes(x=Longitude, y= Latitude, size = Size, color= Size, alpha = Size)) +
   scale_size_continuous(name= "Museum size", breaks = c(1,2,3), labels = c("Small","Medium","Large")) +
   scale_alpha_continuous(name =  "Museum size", breaks = c(1,2,3), labels = c("Small","Medium","Large"), range = c(0.3,0.05)) +
   scale_color_gradientn(name = "Museum size", breaks =c(1,2,3), labels = c("Small","Medium","Large"), colours = col_dots) +
-  ylim(50,59)+
-  coord_map() + # make a map
+  ylim(50,59)+ # How high do i want the graph?
+   xlim(-8,10) + # How on the side do I want it? you can also change that with plot.margins in theme
+  coord_map(projection = "mercator") + # make a map, mercator is for nice scale
   labs(
      title = "Uk museums over time",
      subtitle = "Location of the different museums of the Uk, when they \noppened and which size they were
      \n year",
      caption = "Source: · Graphic: Maria Granell Ruiz"
-     #  tag = "WHATAFUCK"
   ) +
   theme_void() +
-  guides( colour = guide_legend()) + #to have one legend instead of two
-  theme(legend.position = c(1,0.7),
-        text = element_text(colour= col_dots),
-        plot.background = element_rect(fill=col_background, color = col_background),
-        panel.background = element_rect(fill=col_background, color = col_background),
-        legend.background = element_rect(fill=col_background, color = col_background),
-        plot.title = element_text(size = 20, face="bold"),
+  guides( colour = guide_legend()) + #to have one legend instead of
+  theme(legend.position = c(0.8,0.4),
+        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+        text = element_text(colour= col_dots, size = 18),
+        plot.background = element_rect(fill= col_background, color = NA),
+        panel.background = element_rect(fill= col_background, color = NA),
+        legend.background = element_rect(fill= col_background, color = NA),
+        plot.title = element_text(size = 23, face="bold", hjust = 0.8, vjust = -30),
         plot.subtitle = element_text(size= 12)
        # plot.tag = element_text()
   )
 
 #ggsave("test.png", bg = col_background, h = 5)
+
 static
 # animated plot --------------
 in_len <- as.integer(1)
 static + transition_events(start = year_open, end = year_closed, enter_length = in_len, exit_length = in_len) +
   labs(subtitle = "Location of the different museums of the Uk, when they \noppened and which size they were
      \n Year: {round(frame_time, 0)}")
+
