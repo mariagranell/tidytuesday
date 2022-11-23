@@ -43,7 +43,8 @@ uk <- map_data("world") %>%
 data <- museums[,c("year_open", "year_closed", "Latitude", "Longitude", "Size")]
 data$Size <- as.numeric(ifelse(data$Size == "large", 3,
                                ifelse(data$Size == "small", 1,
-                                      ifelse(data$Size == "medium", 2, "NA"))))
+                                      ifelse(data$Size == "medium", 2,
+                                             ifelse(data$Size == "huge",4, "NA")))))
 # remove values with na
 na.omit(data)
 
@@ -59,40 +60,46 @@ col_dots <- "white"
 col_background <- "#11344F"
 
 # static ggplot
- ggplot() +
+static <- ggplot() +
   geom_polygon(data = uk, aes(x=long, y=lat, group= group), fill="grey", alpha = 0.3) +
   geom_point(data = data, aes(x=Longitude, y= Latitude, size = Size, color= Size, alpha = Size)) +
-  scale_size_continuous(name= "Museum size", breaks = c(1,2,3), labels = c("Small","Medium","Large")) +
-  scale_alpha_continuous(name =  "Museum size", breaks = c(1,2,3), labels = c("Small","Medium","Large"), range = c(0.3,0.05)) +
-  scale_color_gradientn(name = "Museum size", breaks =c(1,2,3), labels = c("Small","Medium","Large"), colours = col_dots) +
-  ylim(50,59)+ # How high do i want the graph?
+  scale_size_continuous(name= "Museum size", breaks = c(1,2,3,4), labels = c("Small","Medium","Large","Huge")) +
+  scale_alpha_continuous(name =  "Museum size", breaks = c(1,2,3,4), labels = c("Small","Medium","Large","Huge"), range = c(0.3,0.05)) +
+  scale_color_gradientn(name = "Museum size", breaks =c(1,2,3,4), labels = c("Small","Medium","Large","Huge"), colours = col_dots) +
+  ylim(50,60.5)+# How high do i want the graph?
    xlim(-8,10) + # How on the side do I want it? you can also change that with plot.margins in theme
   coord_map(projection = "mercator") + # make a map, mercator is for nice scale
   labs(
-     title = "Uk museums over time",
-     subtitle = "Location of the different museums of the Uk, when they \noppened and which size they were
-     \n year",
-     caption = "Source: · Graphic: Maria Granell Ruiz"
+     subtitle = "Year",
   ) +
   theme_void() +
-  guides( colour = guide_legend()) + #to have one legend instead of
-  theme(legend.position = c(0.8,0.4),
-        plot.margin = margin(0.5, 0.5, 0.5, 0.5, "cm"),
+  guides( colour = guide_legend()) + #to have one legend
+   annotate("text", x = 5, y = 60, size = 7.5, fontface = "bold", hjust = 0.5, color = "white",
+            label = "Uk museums over time") +
+   annotate("text", x = 0, y = 59, size = 4.5, fontface = "bold", hjust = 0, color = "white",
+            label = "Location of the open Uk museums
+             \nin relation to the year of opening and
+             \nclosing, dot size represents museum size.",
+   lineheight = 0.5) + #line light says how close the lines are withing the text
+   annotate("text", x = 10, y = 50, size = 3, fontface = "bold", hjust = 1, color = "white",
+            label = "Source: MuseWeb #TidyTuesday week 47· Graphic: Maria Granell Ruiz") +
+
+  theme(legend.position = c(0.8,0.5),
+        plot.margin = margin(0, 0.5, 0, 0, "cm"),
         text = element_text(colour= col_dots, size = 18),
         plot.background = element_rect(fill= col_background, color = NA),
         panel.background = element_rect(fill= col_background, color = NA),
         legend.background = element_rect(fill= col_background, color = NA),
-        plot.title = element_text(size = 23, face="bold", hjust = 0.8, vjust = -30),
-        plot.subtitle = element_text(size= 12)
-       # plot.tag = element_text()
+        plot.subtitle = element_text(size= 18, hjust = 0.6, vjust = -42)
   )
 
 #ggsave("test.png", bg = col_background, h = 5)
-
 static
 # animated plot --------------
 in_len <- as.integer(1)
 static + transition_events(start = year_open, end = year_closed, enter_length = in_len, exit_length = in_len) +
-  labs(subtitle = "Location of the different museums of the Uk, when they \noppened and which size they were
-     \n Year: {round(frame_time, 0)}")
+  labs(subtitle = "Year: {round(frame_time, 0)}")+
+  theme(
+    plot.subtitle = element_text(size= 18, hjust = 0.6, vjust = -42)
+  )
 
