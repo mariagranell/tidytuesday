@@ -1,61 +1,25 @@
-#----------
-# title: uk museums
-# author: Maria Granell Ruiz
-# date: 22 nov 2022
-# ---------
+# UK museums over time
 
-setwd("/Users/mariagranell/Repositories/tidytuesday/uk_museums_w47/")
+For this week I decided to do an animated graph! I visually investigated which years museums opened and 
+closed in the UK from the 1800 until now. I used the data from [MuseWeb by way of Data Is Plural](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-11-22)
+available in the Github of [Tidy Tuesday week 47](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-11-22)
 
 
-# packages -------------
-library(tidyverse)
-library(tidytuesdayR)
-# make the plot
-library(ggplot2)
-library(ggthemes) # has a theme for maps
-# plot a map
-library(maps)
-# moving graph
+Because so many opened in the last recent years and not that many closed it seems like 
+there´s only museums closing from year 2000 when it seems like there´s a 
+more even opening- closing- rate. Besides plotting which period of time they were open
+and the location within the UK, the dot size represents the size of the museum.
 
-library(gganimate) # includes gifski
-#library(gifski) # package for gif output
-#library(av) # package for video output
+To create this graph I had several references,
+firstly I followed the recommendations of the [Rgallery](https://r-graph-gallery.com/bubble-map.html) to create my first map plot, 
+secondly I animated my plot following this [blog](https://www.alexcookson.com/post/2020-10-18-building-an-animation-step-by-step-with-gganimate/) , 
+lastly I got visually inspired by this [plot](https://erdavis.com/2020/01/04/visualizing-the-geography-of-fm-radio/) about radio stations.
 
+Here you have the static graph, go to my twitter to find the gif, and below for the graph code!
 
-# Get the Data Manually ---------------------
-museums <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-11-22/museums.csv')
+!()[]
 
-# Explore years years --------------
-museums$Year_opened[1]
-# regex explained, select the : and all number (\\d, notice that in R you have to put two \\) at the end of the text ($)
-museums$year_open <- as.numeric(gsub(":\\d{4}$", "", x=museums$Year_opened)) # gsub selects the end of the string and replaces it with nothing
-museums$year_closed <- as.numeric(gsub(":\\d{4}$", "", x=museums$Year_closed)) # gsub selects the end of the string and replaces it with nothing
-
-# museums that are still open put current date
-museums$year_closed <- as.numeric(gsub("9999","2022", museums$year_closed))
-
-# Map plot -------------
-
-# load the uk map
-uk <- map_data("world") %>%
-  filter(region == "UK")
-
-# data with the open and closing year, longitude, latutide and size of the museums
-data <- museums[,c("year_open", "year_closed", "Latitude", "Longitude", "Size")]
-data$Size <- as.numeric(ifelse(data$Size == "large", 3,
-                               ifelse(data$Size == "small", 1,
-                                      ifelse(data$Size == "medium", 2,
-                                             ifelse(data$Size == "huge",4, "NA")))))
-# remove values with na
-na.omit(data)
-
-# make the years and int
-data$year_closed <- as.integer(data$year_closed)
-data$year_open <- as.integer(data$year_open)
-
-# the data is cooler from the 1800
-data <- data[data$year_open > 1800,]
-
+```
 # colors
 col_dots <- "white"
 col_background <- "#11344F"
@@ -107,3 +71,9 @@ animated <- static + transition_events(start = year_open, end = year_closed, ent
 # save, it will save it as a collection on images,
 # when uploading it to twitter is animated
 anim_save("animated.gif", animated)
+
+```
+
+
+
+
