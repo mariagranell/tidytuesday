@@ -15,9 +15,9 @@ firstly I followed the recommendations of the [Rgallery](https://r-graph-gallery
 secondly I animated my plot following this [blog](https://www.alexcookson.com/post/2020-10-18-building-an-animation-step-by-step-with-gganimate/) , 
 lastly I got visually inspired by this [plot](https://erdavis.com/2020/01/04/visualizing-the-geography-of-fm-radio/) about radio stations.
 
-Here you have the static graph, go to my twitter to find the gif, and below for the graph code!
+Here you have the static graph, go to my twitter to find the [gif](https://twitter.com/mgranellruiz/status/1597649147774963712), and below for the graph code!
 
-!()[]
+![image](https://github.com/mariagranell/tidytuesday/blob/main/uk_museums_w47/static.png)
 
 ```
 # colors
