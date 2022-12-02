@@ -1,6 +1,8 @@
 # Tidy Tuesday Gallery
 
-Week 47
+go to [my twitter](https://twitter.com/mgranellruiz) to see the interactive graphs!
+
+Week 47- interactive
 ![w45](https://github.com/mariagranell/tidytuesday/blob/main/uk_museums_w47/static.png)
 
 Week 46
